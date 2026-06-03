@@ -1,0 +1,55 @@
+{
+  "title": "LLM Gateway — Envoy Metrics",
+  "uid": "llm-gateway",
+  "version": 1,
+  "schemaVersion": 38,
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1, "type": "stat", "title": "Requisições 2xx (sucesso)",
+      "gridPos": {"x":0,"y":0,"w":6,"h":4},
+      "targets": [{"expr":"envoy_cluster_external_upstream_rq_2xx{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"2xx"}],
+      "datasource": "Prometheus"
+    },
+    {
+      "id": 2, "type": "stat", "title": "Requisições 5xx (erro)",
+      "gridPos": {"x":6,"y":0,"w":6,"h":4},
+      "fieldConfig": {"defaults":{"color":{"mode":"thresholds"},"thresholds":{"steps":[{"color":"green","value":0},{"color":"red","value":1}]}}},
+      "targets": [{"expr":"envoy_cluster_external_upstream_rq_5xx{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"5xx"}],
+      "datasource": "Prometheus"
+    },
+    {
+      "id": 3, "type": "stat", "title": "Circuit Breaker aberto",
+      "gridPos": {"x":12,"y":0,"w":6,"h":4},
+      "fieldConfig": {"defaults":{"color":{"mode":"thresholds"},"thresholds":{"steps":[{"color":"green","value":0},{"color":"red","value":1}]}}},
+      "targets": [{"expr":"envoy_cluster_circuit_breakers_default_rq_open{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"CB open"}],
+      "datasource": "Prometheus"
+    },
+    {
+      "id": 4, "type": "stat", "title": "Health Check — upstream healthy",
+      "gridPos": {"x":18,"y":0,"w":6,"h":4},
+      "targets": [{"expr":"envoy_cluster_health_check_healthy{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"healthy"}],
+      "datasource": "Prometheus"
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Taxa de requisições (rq/s)",
+      "gridPos": {"x":0,"y":4,"w":12,"h":8},
+      "targets": [
+        {"expr":"rate(envoy_cluster_upstream_rq_total{envoy_cluster_name=\"ollama_cluster\"}[30s])","legendFormat":"total rq/s"},
+        {"expr":"rate(envoy_cluster_external_upstream_rq_2xx{envoy_cluster_name=\"ollama_cluster\"}[30s])","legendFormat":"2xx/s"},
+        {"expr":"rate(envoy_cluster_external_upstream_rq_5xx{envoy_cluster_name=\"ollama_cluster\"}[30s])","legendFormat":"5xx/s"}
+      ],
+      "datasource": "Prometheus"
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Retries e Timeouts",
+      "gridPos": {"x":12,"y":4,"w":12,"h":8},
+      "targets": [
+        {"expr":"envoy_cluster_upstream_rq_retry{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"retries"},
+        {"expr":"envoy_cluster_upstream_rq_timeout{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"timeouts"},
+        {"expr":"envoy_cluster_upstream_rq_per_try_timeout{envoy_cluster_name=\"ollama_cluster\"}","legendFormat":"per-try timeout"}
+      ],
+      "datasource": "Prometheus"
+    }
+  ]
+}

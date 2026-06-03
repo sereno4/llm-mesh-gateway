@@ -1,0 +1,89 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "LLM Gateway - Observability",
+    "tags": ["llm", "gateway", "arize"],
+    "timezone": "utc",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Requisições por Segundo",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(rate(envoy_http_rq_total[1m]))",
+            "legendFormat": "RPS"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Latência p95 (ms)",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(envoy_http_rq_time_bucket[5m])) by (le))",
+            "legendFormat": "p95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(envoy_http_rq_time_bucket[5m])) by (le))",
+            "legendFormat": "p99"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Distribuição de Intents",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (intent) (llm_intent_classified_total)",
+            "legendFormat": "{{intent}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 4,
+        "title": "Taxa de Erro por Cluster",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(envoy_http_rq_xx{envoy_response_code_class=~\"4|5\"}[5m])) by (envoy_cluster_name)",
+            "legendFormat": "{{envoy_cluster_name}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Tokens por Segundo",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(rate(llm_tokens_generated_total[1m]))",
+            "legendFormat": "tokens/s"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16}
+      },
+      {
+        "id": 6,
+        "title": "Custo Estimado ($)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(llm_tokens_generated_total) * 0.000002",
+            "legendFormat": "USD"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16}
+      }
+    ],
+    "time": {"from": "now-1h", "to": "now"},
+    "refresh": "10s"
+  },
+  "overwrite": true
+}

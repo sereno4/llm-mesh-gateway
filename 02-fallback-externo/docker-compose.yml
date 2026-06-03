@@ -1,0 +1,41 @@
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.30-latest
+    container_name: envoy-gateway-02
+    ports:
+      - "8081:8080"
+      - "9902:9901"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    networks:
+      - default
+      - ollama-net
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-02
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-02
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data-02:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
+networks:
+  default: {}
+  ollama-net:
+    external: true
+    name: 01-envoy-basico_default
+
+volumes:
+  grafana-data-02:

@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Env
+venv/
+.venv/
+env/
+
+# Logs
+*.log
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+keys/
+
+# Terraform/OpenTofu
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-data/
+prometheus-data/
+grafana-data/
+
+# Ollama
+models/
+
+# Phoenix
+phoenix-data/
+
+# Test
+.pytest_cache/
+coverage.xml
+htmlcov/
+
+# Local configs
+tmp/
+cache/

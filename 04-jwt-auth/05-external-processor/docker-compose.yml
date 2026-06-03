@@ -1,0 +1,22 @@
+services:
+  envoy:
+    image: envoyproxy/envoy:v1.30-latest
+    container_name: envoy-intent
+    ports:
+      - "8084:8084"
+      - "9905:9901"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    command: ["envoy", "-c", "/etc/envoy/envoy.yaml", "--log-level", "info"]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - llm-mesh
+      - ollama-net
+
+networks:
+  llm-mesh:
+    driver: bridge
+  ollama-net:
+    external: true
+    name: 01-envoy-basico_default

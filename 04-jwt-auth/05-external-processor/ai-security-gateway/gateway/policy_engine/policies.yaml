@@ -1,0 +1,18 @@
+rules:
+
+  - name: block_kubectl_delete
+    when:
+      prompt: "kubectl\\s+delete"
+    action: BLOCK
+    reason: "Dangerous Kubernetes deletion"
+
+  - name: block_data_exfiltration
+    when:
+      prompt: "dump.*database|credentials|\\.env"
+    action: BLOCK
+    reason: "Sensitive data exfiltration"
+
+  - name: allow_low_risk
+    when:
+      risk_level: "LOW"
+    action: ALLOW

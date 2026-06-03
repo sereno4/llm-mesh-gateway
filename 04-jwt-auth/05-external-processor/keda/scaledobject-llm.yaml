@@ -1,0 +1,51 @@
+# Aplicar no Kubernetes com: kubectl apply -f keda/scaledobject-llm.yaml
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: ollama-scaler
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: ollama-deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  cooldownPeriod: 300
+  triggers:
+    # Trigger 1: Latência p95 > 2s
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: envoy_http_rq_time_p95
+        threshold: "2000"
+        query: |
+          histogram_quantile(0.95, 
+            sum(rate(envoy_http_rq_time_bucket[5m])) by (le)
+          )
+
+    # Trigger 2: RPS > 50
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: envoy_http_rq_total
+        threshold: "50"
+        query: |
+          sum(rate(envoy_http_rq_total[1m]))
+
+    # Trigger 3: Erros 5xx > 5%
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: envoy_http_rq_5xx_rate
+        threshold: "0.05"
+        query: |
+          sum(rate(envoy_http_rq_xx{envoy_response_code_class="5"}[5m])) /
+          sum(rate(envoy_http_rq_total[5m]))
+
+    # Trigger 4: Queue depth (simulado)
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus:9090
+        metricName: llm_queue_depth
+        threshold: "10"
+        query: |
+          sum(llm_pending_requests)

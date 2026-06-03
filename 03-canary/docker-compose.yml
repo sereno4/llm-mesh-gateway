@@ -1,0 +1,65 @@
+services:
+  ollama-v1:
+    image: ollama/ollama:latest
+    container_name: ollama-v1
+    ports:
+      - "11436:11434"
+    volumes:
+      - ollama-v1-data:/root/.ollama
+    environment:
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_HOST=0.0.0.0
+    entrypoint: >
+      sh -c "
+        ollama serve &
+        sleep 10
+        ollama pull llama3.2:1b
+        echo 'PRONTO'
+        wait
+      "
+
+  ollama-v2:
+    image: ollama/ollama:latest
+    container_name: ollama-v2
+    ports:
+      - "11437:11434"
+    volumes:
+      - ollama-v2-data:/root/.ollama
+    environment:
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_HOST=0.0.0.0
+    entrypoint: >
+      sh -c "
+        ollama serve &
+        sleep 10
+        ollama pull llama3.2:1b
+        echo 'PRONTO'
+        wait
+      "
+
+  envoy:
+    image: envoyproxy/envoy:v1.30-latest
+    container_name: envoy-canary
+    ports:
+      - "8082:8080"
+      - "9903:9901"
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml:ro
+    command: ["envoy", "-c", "/etc/envoy/envoy.yaml", "--log-level", "info"]
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: prometheus-canary
+    ports:
+      - "9092:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-canary-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+volumes:
+  ollama-v1-data:
+  ollama-v2-data:
+  prometheus-canary-data:

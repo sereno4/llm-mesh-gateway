@@ -1,0 +1,149 @@
+static_resources:
+  listeners:
+    - name: listener_0
+      address:
+        socket_address:
+          address: 0.0.0.0
+          port_value: 8084
+      filter_chains:
+        - filters:
+            - name: envoy.filters.network.http_connection_manager
+              typed_config:
+                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
+                stat_prefix: ingress_http
+                codec_type: AUTO
+                route_config:
+                  name: local_route
+                  virtual_hosts:
+                    - name: local_service
+                      domains: ["*"]
+                      routes:
+                        - match:
+                            prefix: "/v1/chat/completions"
+                          route:
+                            cluster_header: x-target-cluster
+                            timeout: 120s
+                http_filters:
+                  - name: envoy.filters.http.lua
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+                      inline_code: |
+                        function envoy_on_request(request_handle)
+                          -- Lê o body
+                          local body = request_handle:body()
+                          local body_str = ""
+                          if body then
+                            body_str = body:getBytes(0, body:length())
+                          end
+                          
+                          -- Classifica por regex no content
+                          local intent = "general"
+                          local content = body_str:match('"content":"([^"]+)"')
+                          
+                          if content then
+                            content = string.lower(content)
+                            if content:match("def") or content:match("class") or content:match("import") or content:match("function") or content:match("python") or content:match("code") then
+                              intent = "code"
+                            elseif content:match("analyze") or content:match("compare") or content:match("explain") then
+                              intent = "analysis"
+                            elseif content:match("story") or content:match("poem") or content:match("creative") or content:match("write") then
+                              intent = "creative"
+                            end
+                          end
+                          
+                          -- Prioriza header x-intent se existir
+                          local hint = request_handle:headers():get("x-intent")
+                          if hint and hint ~= "" then
+                            intent = string.lower(hint)
+                          end
+                          
+                          -- Mapeia intent → cluster
+                          local cluster_map = {
+                            code = "code_model",
+                            analysis = "analysis_model",
+                            creative = "creative_model",
+                            general = "general_model"
+                          }
+                          
+                          local cluster = cluster_map[intent] or "general_model"
+                          
+                          -- Adiciona headers para roteamento e tracing
+                          request_handle:headers():add("x-intent-detected", intent)
+                          request_handle:headers():add("x-target-cluster", cluster)
+                          request_handle:headers():add("x-routed-by", "lua-filter")
+                        end
+
+                  - name: envoy.filters.http.router
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+
+  clusters:
+    - name: code_model
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: code_model
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ollama-local
+                      port_value: 11434
+
+    - name: analysis_model
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: analysis_model
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ollama-local
+                      port_value: 11434
+
+    - name: creative_model
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: creative_model
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ollama-local
+                      port_value: 11434
+
+    - name: general_model
+      connect_timeout: 5s
+      type: LOGICAL_DNS
+      dns_lookup_family: V4_ONLY
+      lb_policy: ROUND_ROBIN
+      load_assignment:
+        cluster_name: general_model
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: ollama-local
+                      port_value: 11434
+
+admin:
+  address:
+    socket_address:
+      address: 0.0.0.0
+      port_value: 9901
+  access_log:
+    - name: envoy.access_loggers.stdout
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog

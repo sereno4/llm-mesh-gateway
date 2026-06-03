@@ -1,0 +1,33 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  - /etc/prometheus/envoy-rules.yml
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'envoy'
+    static_configs:
+      - targets: ['envoy:9901']
+    metrics_path: /stats/prometheus
+
+  - job_name: 'keda-metrics'
+    static_configs:
+      - targets: ['keda-metrics:9022']
+
+  - job_name: 'phoenix'
+    static_configs:
+      - targets: ['phoenix:6006']
+
+  - job_name: "soc-gateway"
+    static_configs:
+      - targets: ["172.19.0.1:8000"]

@@ -1,0 +1,32 @@
+groups:
+  - name: llm_gateway_alerts
+    rules:
+      - alert: HighLatencyP95
+        expr: histogram_quantile(0.95, rate(envoy_http_rq_time_bucket[5m])) > 5000
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latência p95 alta no LLM Gateway"
+          description: "Latência p95 está acima de 5s por mais de 2 minutos"
+
+      - alert: HighErrorRate
+        expr: rate(envoy_http_rq_xx{envoy_response_code_class="5"}[5m]) > 0.1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Taxa de erro alta no LLM Gateway"
+          description: "Taxa de erro 5xx está acima de 10%"
+
+      - alert: ModelDrift
+        expr: |
+          (
+            rate(llm_intent_classified_total{intent="code"}[10m]) /
+            rate(llm_intent_classified_total[10m])
+          ) < 0.1
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "Possível drift de intent detectado"
