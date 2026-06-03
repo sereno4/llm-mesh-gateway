@@ -32,38 +32,8 @@
 ---
 
 ## 🏗️ Architecture
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white" />
-  <img src="https://img.shields.io/badge/Envoy-1.28+-BA4A00?style=flat&logo=envoyproxy&logoColor=white" />
-  <img src="https://img.shields.io/badge/OpenTofu-1.6+-FF6B35?style=flat&logo=opentofu&logoColor=white" />
-  <img src="https://img.shields.io/badge/Kubernetes-1.28+-326CE5?style=flat&logo=kubernetes&logoColor=white" />
-  <img src="https://img.shields.io/badge/OpenTelemetry-1.24+-000000?style=flat&logo=opentelemetry&logoColor=white" />
-  <img src="https://img.shields.io/badge/License-MIT-4CAF50?style=flat" />
-</p>
+  
 
-<h1 align="center">LLM Mesh Gateway</h1>
-<p align="center"><strong>Enterprise AI Gateway for Production-Grade Generative AI Systems</strong></p>
-<p align="center">
-  <a href="#architecture">Architecture</a> •
-  <a href="#features">Features</a> •
-  <a href="#security">Security</a> •
-  <a href="#observability">Observability</a> •
-  <a href="#deployment">Deployment</a> •
-  <a href="#roadmap">Roadmap</a>
-</p>
-
----
-
-## 🎯 Executive Summary
-
-**LLM Mesh Gateway** is a cloud-native AI gateway platform that provides **resilience**, **observability**, **governance**, and **security** for Generative AI applications at enterprise scale. Built on Envoy Proxy and designed for Kubernetes, it enables organizations to deploy multi-LLM architectures with production-grade reliability.
-
-> **Problem**: Enterprises struggle with LLM vendor lock-in, unpredictable latency, prompt injection attacks, and lack of visibility into AI traffic.  
-> **Solution**: A unified control plane that routes, protects, and observes every LLM interaction across your infrastructure.
-
----
-
-## 🏗️ Architecture
 
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         CLIENT LAYER                                     │
