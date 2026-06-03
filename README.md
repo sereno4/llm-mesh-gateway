@@ -104,6 +104,105 @@
 | **Risk Scoring** | Anomaly detection per request | Custom scoring engine |
 | **Cost Attribution** | Per-tenant, per-model billing | Custom metrics |
 
+## ✨ Features
+
+- JWT Authentication
+- OPA / Rego Policy Enforcement
+- Prompt Injection Detection
+- Data Exfiltration Detection
+- Tool Abuse Detection
+- Circuit Breaker
+- Automatic Provider Fallback
+- Canary Releases
+- Distributed Tracing
+- Arize Phoenix Integration
+- Grafana Dashboards
+- Prometheus Metrics
+- OpenTofu Infrastructure
+- Kubernetes Ready
+
+
+🔐 Camada de Segurança
+Autenticação
+JWT Validation
+Claims Validation
+Role Based Access Control
+Políticas
+OPA (Open Policy Agent)
+Rego Policies
+Runtime Enforcement
+Detecção de Ameaças
+Prompt Injection
+Jailbreak Attempts
+Tool Abuse
+Data Exfiltration
+PII Detection
+AI Security Gateway
+Score de risco
+Correlação de eventos
+Decisão automática
+Exportação para SIEM
+🔄 Resiliência
+Circuit Breaker
+
+Proteção contra provedores indisponíveis.
+
+Fallback Automático
+
+OpenAI → Claude → Modelo Local
+
+Canary Releases
+
+Distribuição progressiva de tráfego entre versões de modelos.
+
+Rate Limiting
+
+Proteção contra abuso e picos de utilização.
+
+📊 Observabilidade
+Prometheus
+
+Coleta de métricas operacionais:
+
+Requests por segundo
+Latência
+Erros
+Utilização de provedores
+Score de risco
+Grafana
+
+Dashboards para:
+
+Tráfego
+Segurança
+Resiliência
+Custos
+Performance
+OpenTelemetry
+
+Tracing distribuído ponta a ponta.
+
+Arize Phoenix
+
+Monitoramento de:
+
+Traces
+Latência
+Fluxo de requisições
+Qualidade operacional
+☁️ Infraestrutura como Código
+
+Toda a infraestrutura é provisionada utilizando OpenTofu.
+
+Recursos provisionados
+Namespace Kubernetes
+Gateway
+Prometheus
+Grafana
+ConfigMaps
+Services
+Deployments
+
 ---
 
 ## 🚀 Quick Start
@@ -273,6 +372,24 @@ Arize AI for LLM observability foundations
 🎨 Badges Adicionais (Opcional)
 Adicione no topo do README:
 markdown
+
+O ponto forte doprojeto não é apenas “um gateway para LLM”. O diferencial é a combinação de:
+
+Segurança para IA
+Resiliência (fallback + circuit breaker)
+Observabilidade (Grafana + Phoenix)
+Governança (OPA/Rego)
+Infraestrutura como código (OpenTofu)
+
+Próximos Passos
+Integração com múltiplos provedores comerciais
+FinOps para consumo de LLMs
+Avaliação automática de respostas
+Monitoramento de drift
+Detecção avançada de comportamento anômalo
+Governance Layer para IA Generativa
+
+
 <p align="center">
   <img src="https://github.com/sereno4/llm-mesh-gateway/actions/workflows/ci.yml/badge.svg" />
   <img src="https://img.shields.io/codecov/c/github/sereno4/llm-mesh-gateway" />
