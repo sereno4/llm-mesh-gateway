@@ -369,10 +369,6 @@ Arize AI for LLM observability foundations
   <strong>Built with ❤️ by <a href="https://github.com/sereno4">@sereno4</a></strong>
 </p>
 ```
-🎨 Badges Adicionais (Opcional)
-Adicione no topo do README:
-markdown
-
 O ponto forte doprojeto não é apenas “um gateway para LLM”. O diferencial é a combinação de:
 
 Segurança para IA
