@@ -142,28 +142,20 @@ Score de risco
 Correlação de eventos
 Decisão automática
 Exportação para SIEM
+
 🔄 Resiliência
 Circuit Breaker
-
 Proteção contra provedores indisponíveis.
-
 Fallback Automático
-
-OpenAI → Claude → Modelo Local
-
+ Grok →  Lhama Modelo Local
 Canary Releases
-
 Distribuição progressiva de tráfego entre versões de modelos.
-
 Rate Limiting
-
 Proteção contra abuso e picos de utilização.
 
 📊 Observabilidade
 Prometheus
-
 Coleta de métricas operacionais:
-
 Requests por segundo
 Latência
 Erros
@@ -179,13 +171,10 @@ Resiliência
 Custos
 Performance
 OpenTelemetry
-
 Tracing distribuído ponta a ponta.
-
 Arize Phoenix
 
 Monitoramento de:
-
 Traces
 Latência
 Fluxo de requisições
