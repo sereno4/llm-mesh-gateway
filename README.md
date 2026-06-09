@@ -265,31 +265,6 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
     "routing_hint": "low_latency"
   }'
 
-#### 🔒 Security Architecture
-
-```mermaid
-flowchart TB
-
-    Client[Client Request]
-
-    subgraph ZeroTrust
-        TLS[TLS 1.3]
-        Auth[Authentication]
-        OPA[Authorization]
-        Guard[Prompt Guard]
-        DLP[DLP and PII Protection]
-        Audit[Audit Logging]
-    end
-
-    Gateway[LLM Mesh Gateway]
-
-    Client --> TLS
-    TLS --> Auth
-    Auth --> OPA
-    OPA --> Guard
-    Guard --> DLP
-    DLP --> Audit
-    Audit --> Gateway
 ```
 Risk Scoring Engine
 Python
