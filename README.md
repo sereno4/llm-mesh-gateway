@@ -260,18 +260,39 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
     "routing_hint": "low_latency"
   }'
 
-🔒 Security Architecture
-plain
-┌─────────────────────────────────────────────────────────┐
-│                    ZERO-TRUST PERIMETER                    │
-├─────────────────────────────────────────────────────────┤
-│  Layer 1: Transport Security (TLS 1.3, mTLS)          │
-│  Layer 2: Authentication (JWT, OIDC, API Keys)          │
-│  Layer 3: Authorization (OPA/Rego policies)            │
-│  Layer 4: Input Validation (Prompt Guard, Schema)      │
-│  Layer 5: Output Filtering (PII Redaction, DLP)        │
-│  Layer 6: Audit & Compliance (Logging, Retention)        │
-└─────────────────────────────────────────────────────────┘
+## 🔒 Security Architecture
+
+```mermaid
+flowchart LR
+
+    Client["Client"]
+
+    subgraph Security["Zero Trust Security Layers"]
+
+        TLS["TLS 1.3 / mTLS"]
+
+        Auth["Authentication<br/>JWT • OIDC • API Keys"]
+
+        AuthZ["Authorization<br/>OPA • Rego"]
+
+        Guard["Prompt Security<br/>Injection Detection"]
+
+        DLP["Data Protection<br/>PII Redaction • DLP"]
+
+        Audit["Audit & Compliance<br/>Logs • Retention"]
+
+    end
+
+    Gateway["LLM Mesh Gateway"]
+
+    Client --> TLS
+    TLS --> Auth
+    Auth --> AuthZ
+    AuthZ --> Guard
+    Guard --> DLP
+    DLP --> Audit
+    Audit --> Gateway
+```
 Risk Scoring Engine
 Python
 # Example risk scoring
