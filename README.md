@@ -83,6 +83,10 @@ flowchart TB
 ```
 ## ✨ Core Features
 
+
+
+<div align="center">
+
 ### 🔄 Resilience & Reliability
 | Feature | Description | Technology |
 |---------|-------------|------------|
@@ -260,6 +264,8 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
     "messages": [{"role": "user", "content": "Hello, world!"}],
     "routing_hint": "low_latency"
   }'
+
+</div>
 🔒 Security Architecture
 plain
 ┌─────────────────────────────────────────────────────────┐
