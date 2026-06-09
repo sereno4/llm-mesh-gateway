@@ -30,6 +30,35 @@
 > **Solution**: A unified control plane that routes, protects, and observes every LLM interaction across your infrastructure.
 
 ---
+## 🔒 Security Architecture
+
+```mermaid
+flowchart LR
+
+    Client[Client]
+
+    TLS[TLS 1.3 / mTLS]
+
+    Auth[Authentication<br>JWT OIDC API Keys]
+
+    AuthZ[Authorization<br>OPA Rego]
+
+    Guard[Prompt Security<br>Injection Detection]
+
+    DLP[Data Protection<br>PII Redaction DLP]
+
+    Audit[Audit & Compliance<br>Logs Retention]
+
+    Gateway[LLM Mesh Gateway]
+
+    Client --> TLS
+    TLS --> Auth
+    Auth --> AuthZ
+    AuthZ --> Guard
+    Guard --> DLP
+    DLP --> Audit
+    Audit --> Gateway
+```
 
 ## 🔒 Security Architecture
 
