@@ -236,31 +236,28 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
     "routing_hint": "low_latency"
   }'
 
-## 🔒 Security Architecture
+#### 🔒 Security Architecture
 
 ```mermaid
-flowchart LR
+flowchart TB
 
-    Client[Client]
+    Client[Client Request]
 
-    TLS[TLS 1.3 / mTLS]
-
-    Auth[Authentication<br>JWT OIDC API Keys]
-
-    AuthZ[Authorization<br>OPA Rego]
-
-    Guard[Prompt Security<br>Injection Detection]
-
-    DLP[Data Protection<br>PII Redaction DLP]
-
-    Audit[Audit & Compliance<br>Logs Retention]
+    subgraph ZeroTrust
+        TLS[TLS 1.3]
+        Auth[Authentication]
+        OPA[Authorization]
+        Guard[Prompt Guard]
+        DLP[DLP and PII Protection]
+        Audit[Audit Logging]
+    end
 
     Gateway[LLM Mesh Gateway]
 
     Client --> TLS
     TLS --> Auth
-    Auth --> AuthZ
-    AuthZ --> Guard
+    Auth --> OPA
+    OPA --> Guard
     Guard --> DLP
     DLP --> Audit
     Audit --> Gateway
