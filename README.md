@@ -31,55 +31,31 @@
 
 ---
 
+## 🔒 Security Architecture
+
 ```mermaid
----
-config:
-  layout: elk
----
 flowchart TB
 
-    CLIENT["🌐 Client Layer<br/>Web Apps • Mobile • Agents • Copilots • Internal Tools"]
+    Client[Client Request]
 
-    subgraph GATEWAY["🚪 LLM Mesh Gateway"]
-
-        subgraph SECURITY["Authentication & Security"]
-            JWT["JWT Auth"]
-            OPA["OPA / Rego"]
-            RL["Rate Limiting"]
-            PG["Prompt Guardrails"]
-        end
-
-        subgraph TRAFFIC["Traffic Management"]
-            CANARY["Canary Routing"]
-            CB["Circuit Breaker"]
-            FB["Fallback Engine"]
-            COST["Cost Tracking"]
-        end
-
+    subgraph ZeroTrust
+        TLS[TLS 1.3]
+        Auth[Authentication]
+        OPA[Authorization]
+        Guard[Prompt Guard]
+        DLP[DLP and PII Protection]
+        Audit[Audit Logging]
     end
 
-    CLIENT --> GATEWAY
+    Gateway[LLM Mesh Gateway]
 
-    subgraph PROVIDERS["🤖 Model Providers"]
-        GPT["OpenAI GPT-4"]
-        CLAUDE["Anthropic Claude"]
-        LLAMA["Local LLaMA"]
-    end
-
-    GATEWAY --> GPT
-    GATEWAY --> CLAUDE
-    GATEWAY --> LLAMA
-
-    subgraph OBS["📊 Observability Plane"]
-        PROM["Prometheus"]
-        GRAF["Grafana"]
-        OTEL["OpenTelemetry"]
-        PHX["Arize Phoenix"]
-    end
-
-    GPT --> OBS
-    CLAUDE --> OBS
-    LLAMA --> OBS
+    Client --> TLS
+    TLS --> Auth
+    Auth --> OPA
+    OPA --> Guard
+    Guard --> DLP
+    DLP --> Audit
+    Audit --> Gateway
 ```
 
 ### 🔄 Resilience & Reliability
