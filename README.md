@@ -265,25 +265,21 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
 ```mermaid
 flowchart LR
 
-    Client["Client"]
+    Client[Client]
 
-    subgraph Security["Zero Trust Security Layers"]
+    TLS[TLS 1.3 / mTLS]
 
-        TLS["TLS 1.3 / mTLS"]
+    Auth[Authentication<br>JWT OIDC API Keys]
 
-        Auth["Authentication<br/>JWT • OIDC • API Keys"]
+    AuthZ[Authorization<br>OPA Rego]
 
-        AuthZ["Authorization<br/>OPA • Rego"]
+    Guard[Prompt Security<br>Injection Detection]
 
-        Guard["Prompt Security<br/>Injection Detection"]
+    DLP[Data Protection<br>PII Redaction DLP]
 
-        DLP["Data Protection<br/>PII Redaction • DLP"]
+    Audit[Audit & Compliance<br>Logs Retention]
 
-        Audit["Audit & Compliance<br/>Logs • Retention"]
-
-    end
-
-    Gateway["LLM Mesh Gateway"]
+    Gateway[LLM Mesh Gateway]
 
     Client --> TLS
     TLS --> Auth
