@@ -382,7 +382,6 @@ OpenTofu team for infrastructure-as-code tooling
 Arize AI for LLM observability foundations
 <p align="center">
   <strong>Built with ❤️ by <a href="https://github.com/sereno4">@sereno4</a></strong>
-</p>
 ```
 O ponto forte doprojeto não é apenas “um gateway para LLM”. O diferencial é a combinação de:
 
