@@ -81,11 +81,6 @@ flowchart TB
     CLAUDE --> OBS
     LLAMA --> OBS
 ```
-## ✨ Core Features
-
-
-
-<div align="center">
 
 ### 🔄 Resilience & Reliability
 | Feature | Description | Technology |
@@ -265,7 +260,6 @@ curl -X POST https://gateway.your-domain.com/v1/chat/completions \
     "routing_hint": "low_latency"
   }'
 
-</div>
 🔒 Security Architecture
 plain
 ┌─────────────────────────────────────────────────────────┐
