@@ -30,7 +30,7 @@
 > **Solution**: A unified control plane that routes, protects, and observes every LLM interaction across your infrastructure.
 
 ---
-## 🔒 Security Architecture
+##  Architecture projeto
 
 ```mermaid
 flowchart LR
