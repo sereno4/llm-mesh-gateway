@@ -31,49 +31,56 @@
 
 ---
 
-## 🏗️ Architecture
-
-```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         CLIENT LAYER                                    │
-│  Web Apps • Mobile • Agents • Copilots • Internal Tools                │
-└─────────────────────────────────────────────────────────────────────────┘
-                                   │
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         LLM MESH GATEWAY                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│  Authentication & Security                                              │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐       │
-│  │ JWT Auth    │ │ OPA / Rego  │ │ Rate Limit  │ │ Prompt      │       │
-│  │ Layer       │ │ Policies    │ │ Protection  │ │ Guardrails  │       │
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘       │
-│                                                                         │
-│  Traffic Management                                                     │
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐       │
-│  │ Canary      │ │ Circuit     │ │ Fallback    │ │ Cost        │       │
-│  │ Routing     │ │ Breaker     │ │ Engine      │ │ Tracking    │       │
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘       │
-└─────────────────────────────────────────────────────────────────────────┘
-                    │                 │                 │
-                    ▼                 ▼                 ▼
-┌─────────────────────┐ ┌─────────────────────┐ ┌─────────────────────┐
-│ OpenAI GPT-4        │ │ Anthropic Claude    │ │ Local LLaMA         │
-│ Primary Provider    │ │ Automatic Fallback  │ │ On-Prem Deployment  │
-└─────────────────────┘ └─────────────────────┘ └─────────────────────┘
-                                   │
-                                   ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                      OBSERVABILITY PLANE                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐       │
-│  │ Prometheus  │ │ Grafana     │ │ OpenTelemetry│ │ Arize       │       │
-│  │ Metrics     │ │ Dashboards  │ │ Distributed  │ │ Phoenix     │       │
-│  │             │ │ & Alerts    │ │ Tracing      │ │ LLM Traces  │       │
-│  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘       │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
 ---
+config:
+  layout: elk
+---
+flowchart TB
 
+    CLIENT["🌐 Client Layer<br/>Web Apps • Mobile • Agents • Copilots • Internal Tools"]
+
+    subgraph GATEWAY["🚪 LLM Mesh Gateway"]
+
+        subgraph SECURITY["Authentication & Security"]
+            JWT["JWT Auth"]
+            OPA["OPA / Rego"]
+            RL["Rate Limiting"]
+            PG["Prompt Guardrails"]
+        end
+
+        subgraph TRAFFIC["Traffic Management"]
+            CANARY["Canary Routing"]
+            CB["Circuit Breaker"]
+            FB["Fallback Engine"]
+            COST["Cost Tracking"]
+        end
+
+    end
+
+    CLIENT --> GATEWAY
+
+    subgraph PROVIDERS["🤖 Model Providers"]
+        GPT["OpenAI GPT-4"]
+        CLAUDE["Anthropic Claude"]
+        LLAMA["Local LLaMA"]
+    end
+
+    GATEWAY --> GPT
+    GATEWAY --> CLAUDE
+    GATEWAY --> LLAMA
+
+    subgraph OBS["📊 Observability Plane"]
+        PROM["Prometheus"]
+        GRAF["Grafana"]
+        OTEL["OpenTelemetry"]
+        PHX["Arize Phoenix"]
+    end
+
+    GPT --> OBS
+    CLAUDE --> OBS
+    LLAMA --> OBS
+```
 ## ✨ Core Features
 
 ### 🔄 Resilience & Reliability
